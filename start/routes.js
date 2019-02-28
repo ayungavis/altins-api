@@ -110,7 +110,7 @@ Route.group(() => {
 Route.group(() => {
 	Route.post('register', 'AuthController.register');
 	Route.post('login', 'AuthController.login');
-	Route.post('check', 'AuthController.check').middleware('auth')
+	Route.get('check', 'AuthController.check').middleware('auth')
 	Route.post('refresh', 'AuthController.refreshToken').middleware('auth')
 	Route.post('logout', 'AuthController.logout').middleware('auth')
 }).prefix(Prefix + '/auth');

@@ -9,6 +9,7 @@
  */
 
 const Academic = use('App/Models/Academic')
+const DataGrid = use('DataGrid')
 
 class AcademicController {
 	/**
@@ -22,11 +23,44 @@ class AcademicController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let academics = await Academic.all()
-			return response.json(academics)
+			const config = {
+				query () {
+					return Academic.query().with('user').fetch()
+				},
+
+				sortable: {
+					id: 'id',
+					generation: 'generation',
+					year_in: 'year_in',
+					year_out: 'year_out',
+					thesis: 'thesis',
+					first_supervisor: 'first_supervisor',
+					second_supervisor: 'second_supervisor',
+					created_at: 'created_at'
+				},
+
+				searchable: [
+					'generation',
+					'year_in',
+					'year_out',
+					'thesis',
+					'first_supervisor',
+					'second_supervisor'
+				],
+
+				filterable: {
+					generation: 'generation',
+					year_in: 'year_in',
+					year_out: 'year_out',
+					thesis: 'thesis',
+					first_supervisor: 'first_supervisor',
+					second_supervisor: 'second_supervisor'
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

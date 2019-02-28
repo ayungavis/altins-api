@@ -9,6 +9,7 @@
  */
 
 const Category = use('App/Models/Category')
+const DataGrid = use('DataGrid')
 
 class CategoryController {
 	/**
@@ -22,11 +23,29 @@ class CategoryController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let categories = await Category.all()
-			return response.json(categories)
+			const config = {
+				query () {
+					return Category.query()
+				},
+
+				sortable: {
+					id: 'id',
+					name: 'name',
+					slug: 'slug',
+					created_at: 'created_at'
+				},
+
+				searchable: ['name', 'slug'],
+
+				filterable: {
+					name: 'name',
+					slug: 'slug'
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

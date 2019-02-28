@@ -9,6 +9,7 @@
  */
 
 const City = use('App/Models/City')
+const DataGrid = use('DataGrid')
 
 class CityController {
 	/**
@@ -22,12 +23,32 @@ class CityController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let city = await City.all()
-			return response.json(city)
+			const config = {
+				query () {
+					return City.query()
+				},
+
+				sortable: {
+					id: 'id',
+					province_id: 'province_id',
+					name: 'name',
+					created_at: 'created_at'
+				},
+
+				searchable: ['province_id', 'name'],
+
+				filterable: {
+					province_id: 'province_id',
+					name: 'name',
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
+		// let cities = await City.query().with('province').fetch()
+		// return response.json(cities)
 	}
 
 	/**

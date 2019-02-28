@@ -9,6 +9,7 @@
  */
 
 const Province = use('App/Models/Province')
+const DataGrid = use('DataGrid')
 
 class ProvinceController {
 	/**
@@ -22,11 +23,27 @@ class ProvinceController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			const provinces = await Province.all()
-			return response.json(provinces)	
+			const config = {
+				query () {
+					return Province.query()
+				},
+
+				sortable: {
+					id: 'id',
+					name: 'name',
+					created_at: 'created_at'
+				},
+
+				searchable: ['name'],
+
+				filterable: {
+					name: 'name'
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

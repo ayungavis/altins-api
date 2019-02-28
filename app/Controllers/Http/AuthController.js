@@ -10,7 +10,7 @@ class AuthController {
 			const user = await User.create(input)
 			const accessToken = await auth.withRefreshToken().generate(user)
 			return response.json({
-				"user": user.email,
+				"user": user,
 				"accessToken": accessToken
 			})
 		} catch(error) {
@@ -29,7 +29,7 @@ class AuthController {
 				let user = await User.findBy('email', email)
 				let accessToken = await auth.withRefreshToken().generate(user)
 				return response.json({
-					"user": user.email,
+					"user": user,
 					"accessToken": accessToken
 				})
 			}
@@ -42,12 +42,14 @@ class AuthController {
 
 	async check ({ auth, response }) {
 		try {
-			await auth.check()
+			let account = await auth.getUser()
+			return response.status(200).json(account)
+			/*await auth.check()
 			return response.json({
 				message: 'Token is valid!'
-			})
+			})*/
 		} catch (err) {
-			return response.send({ message: 'Missing or invalid token' })
+			return response.status(401).send({ message: 'Missing or invalid token' })
 		}
 	} 
 

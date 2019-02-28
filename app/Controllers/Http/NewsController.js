@@ -9,6 +9,7 @@
  */
 
 const News = use('App/Models/News')
+const DataGrid = use('DataGrid')
 
 class NewsController {
 	/**
@@ -22,11 +23,33 @@ class NewsController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let news = await News.all()
-			return response.json(news)
+			const config = {
+				query () {
+					return News.query().with('user').with('category').fetch()
+				},
+
+				sortable: {
+					id: 'id',
+					title: 'title',
+					content: 'content',
+					category_id: 'category_id',
+					created_at: 'created_at'
+				},
+
+				searchable: [
+					'title',
+					'content',
+					'category_id'
+				],
+
+				filterable: {
+					category_id: 'category_id',
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

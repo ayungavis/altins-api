@@ -9,6 +9,7 @@
  */
 
 const Contact = use('App/Models/Contact')
+const DataGrid = use('DataGrid')
 
 class ContactController {
 	/**
@@ -22,11 +23,65 @@ class ContactController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let contact = await Contact.all()
-			return response.json(contact)
+			const config = {
+				query () {
+					return Contact.query().with('user').with('province').with('city').fetch()
+				},
+
+				sortable: {
+					id: 'id',
+					origin_addres: 'origin_addres',
+					origin_city_id: 'origin_city_id',
+					origin_province_id: 'origin_province_id',
+					current_address: 'current_address',
+					current_city_id: 'current_city_id',
+					current_province_id: 'current_province_id',
+					phone_number: 'phone_number',
+					whatsapp: 'whatsapp',
+					facebook: 'facebook',
+					twitter: 'twitter',
+					linkedin: 'linkedin',
+					line_id: 'line_id',
+					website: 'website',
+					created_at: 'created_at'
+				},
+
+				searchable: [
+					'origin_addres',
+					'origin_city_id',
+					'origin_province_id',
+					'current_address',
+					'current_city_id',
+					'current_province_id',
+					'phone_number',
+					'whatsapp',
+					'facebook',
+					'twitter',
+					'linkedin',
+					'line_id',
+					'website'
+				],
+
+				filterable: {
+					origin_addres: 'origin_addres',
+					origin_city_id: 'origin_city_id',
+					origin_province_id: 'origin_province_id',
+					current_address: 'current_address',
+					current_city_id: 'current_city_id',
+					current_province_id: 'current_province_id',
+					phone_number: 'phone_number',
+					whatsapp: 'whatsapp',
+					facebook: 'facebook',
+					twitter: 'twitter',
+					linkedin: 'linkedin',
+					line_id: 'line_id',
+					website: 'website'
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

@@ -9,6 +9,7 @@
  */
 
 const Profile = use('App/Models/Profile')
+const DataGrid = use('DataGrid')
 
 class ProfileController {
 	/**
@@ -22,11 +23,53 @@ class ProfileController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			const profiles = await Profile.all()
-			return response.json(profiles)	
+			const config = {
+				query () {
+					return Profile.query().with('user').with('religion').fetch()
+				},
+
+				sortable: {
+					id: 'id',
+					first_name: 'first_name',
+					last_name: 'last_name',
+					nickname: 'nickname',
+					about_me: 'about_me',
+					gender: 'gender',
+					place_of_birth: 'place_of_birth',
+					date_of_birth: 'date_of_birth',
+					religion_id: 'religion_id',
+					stats: 'stats',
+					created_at: 'created_at'
+				},
+
+				searchable: [
+					'first_name',
+					'last_name',
+					'nickname',
+					'about_me',
+					'gender',
+					'place_of_birth',
+					'date_of_birth',
+					'religion_id',
+					'stats'
+				],
+
+				filterable: {
+					first_name: 'first_name',
+					last_name: 'last_name',
+					nickname: 'nickname',
+					about_me: 'about_me',
+					gender: 'gender',
+					place_of_birth: 'place_of_birth',
+					date_of_birth: 'date_of_birth',
+					religion_id: 'religion_id',
+					stats: 'stats'
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

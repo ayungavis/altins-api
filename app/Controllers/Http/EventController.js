@@ -9,6 +9,7 @@
  */
 
 const Event = use('App/Models/Event')
+const DataGrid = use('DataGrid')
 
 class EventController {
 	/**
@@ -22,11 +23,56 @@ class EventController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let event = await Event.all()
-			return response.json(event)
+			const config = {
+				query () {
+					return Event.query().with('user').fetch()
+				},
+
+				sortable: {
+					id: 'id',
+					title: 'title',
+					description: 'description',
+					tos: 'tos',
+					price: 'price',
+					venue: 'venue',
+					location: 'location',
+					latitude: 'latitude',
+					longitude: 'longitude',
+					start_date: 'start_date',
+					end_date: 'end_date',
+					created_at: 'created_at'
+				},
+
+				searchable: [
+					'title',
+					'description',
+					'tos',
+					'price',
+					'venue',
+					'location',
+					'latitude',
+					'longitude',
+					'start_date',
+					'end_date'
+				],
+
+				filterable: {
+					title: 'title',
+					description: 'description',
+					tos: 'tos',
+					price: 'price',
+					venue: 'venue',
+					location: 'location',
+					latitude: 'latitude',
+					longitude: 'longitude',
+					start_date: 'start_date',
+					end_date: 'end_date'
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 

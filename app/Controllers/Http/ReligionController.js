@@ -9,6 +9,7 @@
  */
 
 const Religion = use('App/Models/Religion')
+const DataGrid = use('DataGrid')
 
 class ReligionController {
 	/**
@@ -22,12 +23,28 @@ class ReligionController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let religions = await Religion.all()
-			return response.json(religions)
+			const config = {
+				query () {
+					return Religion.query()
+				},
+
+				sortable: {
+					id: 'id',
+					name: 'name',
+					created_at: 'created_at'
+				},
+
+				searchable: ['name'],
+
+				filterable: {
+					name: 'name',
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
-		}		
+		 	return response.send(err)
+		}	
 	}
 
 	/**

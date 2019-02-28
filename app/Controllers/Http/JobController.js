@@ -9,6 +9,7 @@
  */
 
 const Job = use('App/Models/Job')
+const DataGrid = use('DataGrid')
 
 class JobController {
 	/**
@@ -22,11 +23,33 @@ class JobController {
 	 */
 	async index ({ request, response, view }) {
 		try {
-			let jobs = await Job.all()
-			return response.json(jobs)
+			const config = {
+				query () {
+					return Job.query().with('user').fetch()
+				},
+
+				sortable: {
+					id: 'id',
+					company: 'company',
+					position: 'position',
+					year_in: 'year_in',
+					year_out: 'year_out',
+					created_at: 'created_at'
+				},
+
+				searchable: ['company', 'position', 'year_in', 'year_out'],
+
+				filterable: {
+					company: 'company',
+					position: 'position',
+					year_in: 'year_in',
+					year_out: 'year_out',
+				}
+			}
+			return DataGrid.paginate(config)
 		} catch (err) {
 			console.log(err)
-			return response.send(err)
+		 	return response.send(err)
 		}
 	}
 
