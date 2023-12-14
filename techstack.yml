@@ -1,7 +1,7 @@
 repo_name: ayungavis/altins-api
-report_id: d2b58608b381449602a62fd8faba54d7
+report_id: 7045c2d912e2ff59e194e81ece97d6c3
 repo_type: Public
-timestamp: '2023-11-24T02:05:39+00:00'
+timestamp: '2023-12-14T13:20:53+00:00'
 requested_by: ayungavis
 provider: github
 branch: master
@@ -35,7 +35,7 @@ tools:
   category: Data Stores
   sub_category: Databases
   image_url: https://img.stackshare.io/service/1025/logo-mysql-170x170.png
-  detection_source_url: package.json
+  detection_source_url: https://github.com/ayungavis/altins-api/blob/master/package.json
   detection_source: package.json
   last_updated_by: ayungavis
   last_updated_on: 2019-02-27 05:15:58.000000000 Z
